@@ -1,6 +1,6 @@
 logitCrossVal <-
 function(data, index, nfold = 10, nlam = 20, lambdas = lambdas, thresh = 0.0001, maxit = 10000, alpha = 0.95, min.frac = 0.05, gamma = 0.8, verbose = TRUE, step = 1, reset = 10){
-
+  
   X <- data$x
   y <- data$y
   n <- nrow(X)
@@ -39,18 +39,15 @@ lambdas <- MainSol$lambdas
   lldiff <- rep(0, nlam)
   lldiffFold <- matrix(0, nrow = nlam, ncol = nfold)
   
-  size <- ceiling(nrow(X)/nfold)
+  size <- floor(nrow(X)/nfold)
+  o_flow <- c(rep(1,nrow(X) - size * nfold), rep(0, nfold - (nrow(X) - size * nfold)))
+  sizes <- size + o_flow
+  ind.split <- c(1,cumsum(sizes))
+  
   ind <- sample(1:nrow(data$x), replace = FALSE)
   for(i in 1:nfold){
-    if(i < nfold){
-      ind.out <- ind[((i-1)*size+1):(i*size)]
-      ind.in <- ind[-(((i-1)*size+1):(i*size))]
-  }
-    if(i == nfold){
-      ind.out <- ind[((i-1)*size+1):n]
-      ind.in <- ind[-(((i-1)*size+1):n)]
-    }
-    
+    ind.out <- ind[ind.split[i]:ind.split[i+1]]
+    ind.in <- ind[-(ind.split[i]:ind.split[i+1])]
     new.data <- list(x = data$x[ind.in,], y = data$y[ind.in])
 
     new.sol <- oneDimLogit(new.data, index, thresh = thresh, inner.iter = maxit, lambdas = lambdas, outer.iter = maxit, outer.thresh = thresh, min.frac = min.frac, nlam = nlam, gamma = gamma, step = step, reset = reset, alpha = alpha)

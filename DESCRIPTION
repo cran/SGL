@@ -2,7 +2,7 @@ Package: SGL
 Type: Package
 Title: Fit a GLM (or cox model) with a combination of lasso and group
         lasso regularization
-Version: 1.0
+Version: 1.1
 Date: 2010-10-12
 Author: Noah Simon, Jerome Friedman, Trevor Hastie, and Rob Tibshirani
 Maintainer: Noah Simon <nsimon@stanford.edu>
@@ -11,6 +11,7 @@ Description: Fit a regularized generalized linear model via penalized
         the penalty parameter. Fits linear, logistic and Cox models.
 License: GPL
 LazyLoad: yes
-Packaged: 2012-04-03 22:36:57 UTC; nsimon
+Packaged: 2013-04-02 17:43:37 UTC; nsimon
 Repository: CRAN
-Date/Publication: 2012-04-03 22:51:39
+Date/Publication: 2013-04-02 20:51:39
+NeedsCompilation: yes

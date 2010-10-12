@@ -191,7 +191,7 @@ for(i in 1:num.groups){
   for(j in 1:(length(ord.cors)-1)){
     norms[j] <- sqrt(sum((ord.cors[1:j]-ord.cors[j+1])^2))
   }
-  if(norms[1] > lam[2] * (1-alpha)*sqrt(group.length[i])){
+  if(norms[1] >= lam[2] * (1-alpha)*sqrt(group.length[i])){
     our.cors <- ord.cors[1]
     our.range <- c(ord.cors[2], ord.cors[1])/alpha
   }else{
@@ -205,14 +205,18 @@ for(i in 1:num.groups){
     }
   }
   nn <- length(our.cors)
+  if(alpha == 0.5){
+    alpha = 0.500001
+  }
+  
   A.term <- nn*alpha^2 - (1 - alpha)^2*group.length[i]
   B.term <- - 2 * alpha * sum(our.cors)
   C.term <- sum(our.cors^2)
 
   lams <- c((-B.term + sqrt(B.term^2 - 4 * A.term * C.term))/(2*A.term), (-B.term - sqrt(B.term^2 - 4 * A.term * C.term))/(2*A.term))
-
   
-  lambda.max[i] <- min(subset(lams, lams > our.range[1] & lams < our.range[2]))
+  
+  lambda.max[i] <- min(subset(lams, lams >= our.range[1] & lams <= our.range[2]))
   }
      if(length(ord.cors) == 1){
        lambda.max[i] <- ord.cors

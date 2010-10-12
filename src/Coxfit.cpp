@@ -191,7 +191,7 @@ double negLogLikelihoodCalc(int *riskSetInd, int *riskSet, int *numDeath, int *n
 	  zeroCheck = zeroCheck + pow(grad[j],2);
 	}
 
-      if(zeroCheck < pow(lambda2[0],2)* groupLen[i])  //Or not?
+      if(zeroCheck <= pow(lambda2[0],2)* groupLen[i])  //Or not?
 	{
 	  if(betaIsZero[i] == 0)
 	    {
@@ -286,7 +286,11 @@ double negLogLikelihoodCalc(int *riskSetInd, int *riskSet, int *numDeath, int *n
 		      norm = norm + pow(z[j],2);
 		    }
 		  norm = sqrt(norm);
-		  uOp = (1 - lambda2[0]*sqrt(double(groupLen[i]))*t/norm);   //Or not?
+		  if(norm != 0){
+		    uOp = (1 - lambda2[0]*sqrt(double(groupLen[i]))*t/norm);   //Or not?
+		  }
+		  else{uOp = 0;}
+
 		  if(uOp < 0)
 		    {
 		      uOp = 0;
@@ -376,7 +380,7 @@ double negLogLikelihoodCalc(int *riskSetInd, int *riskSet, int *numDeath, int *n
   
 
 
-  int main(double *X, int* index, int *nrow, int *ncol, int *numGroup, int *rangeGroupInd, int *groupLen, double *lambda1, double *lambda2, double *beta, int *innerIter, int *outerIter, double *thresh, double *outerThresh, int *riskSetInd, int *riskSet, int *numDeath, int *status, int *nDeath, double *eta, double *gamma, int *deathInd, int *totDeath, int *betaIsZero, double *step)
+  int coxSolver(double *X, int* index, int *nrow, int *ncol, int *numGroup, int *rangeGroupInd, int *groupLen, double *lambda1, double *lambda2, double *beta, int *innerIter, int *outerIter, double *thresh, double *outerThresh, int *riskSetInd, int *riskSet, int *numDeath, int *status, int *nDeath, double *eta, double *gamma, int *deathInd, int *totDeath, int *betaIsZero, double *step)
 {
   double* nullBeta = NULL;
   nullBeta = new double[ncol[0]];
@@ -704,7 +708,12 @@ double linNegLogLikelihoodCalc(int *nrow, double *eta, double *y)
 		      norm = norm + pow(z[j],2);
 		    }
 		  norm = sqrt(norm);
-		  uOp = (1 - lambda2[0]*sqrt(double(groupLen[i]))*t/norm);  //Or not?
+
+		  if(norm != 0){
+		    uOp = (1 - lambda2[0]*sqrt(double(groupLen[i]))*t/norm);   //Or not?
+		  }
+		  else{uOp = 0;}
+
 		  if(uOp < 0)
 		    {
 		      uOp = 0;
@@ -985,7 +994,7 @@ double linNegLogLikelihoodCalc(int *nrow, double *eta, double *y)
 	  zeroCheck = zeroCheck + pow(grad[j],2);
 	}
 
-      if(zeroCheck < pow(lambda2[0],2) * groupLen[i])   //Or not?
+      if(zeroCheck <= pow(lambda2[0],2) * groupLen[i])   //Or not?
 	{
 	  if(betaIsZero[i] == 0)
 	    {
@@ -1081,7 +1090,12 @@ double linNegLogLikelihoodCalc(int *nrow, double *eta, double *y)
 		      norm = norm + pow(z[j],2);
 		    }
 		  norm = sqrt(norm);
-		  uOp = (1 - lambda2[0]*sqrt(double(groupLen[i]))*t/norm);   //Or not?
+
+		  if(norm != 0){
+		    uOp = (1 - lambda2[0]*sqrt(double(groupLen[i]))*t/norm);   //Or not?
+		  }
+		  else{uOp = 0;}
+
 		  if(uOp < 0)
 		    {
 		      uOp = 0;
