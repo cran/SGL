@@ -1,0 +1,4 @@
+useDynLib("SGL")
+export(SGL, cvSGL, predictSGL)
+
+S3method("plot","cv.SGL")
