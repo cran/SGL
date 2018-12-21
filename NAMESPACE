@@ -1,4 +1,7 @@
-useDynLib("SGL")
+useDynLib("SGL",.registration = TRUE)
 export(SGL, cvSGL, predictSGL)
 
 S3method("plot","cv.SGL")
+importFrom("graphics", "lines", "par", "plot", "segments","points")
+importFrom("stats", "as.dist", "cor", "dist", "rnorm", "sd", "var")
+importFrom("utils", "read.table", "write.table")

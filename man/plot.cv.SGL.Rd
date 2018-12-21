@@ -14,10 +14,10 @@ Plots the cross-validated error curve, and confidence bounds for each \code{lamb
 A cross validated deviance plot is produced. More regularized models are to the right (less regularized to the left)}
 \references{Simon, N., Friedman, J., Hastie T., and Tibshirani, R. (2011)
   \emph{A Sparse-Group Lasso}, \cr
-  \url{http://www-stat.stanford.edu/~nsimon/SGL.pdf}
+  \url{http://faculty.washington.edu/nrsimon/SGLpaper.pdf}
 }
 \author{Noah Simon, Jerome Friedman, Trevor Hastie, and Rob Tibshirani\cr
-Maintainer: Noah Simon <nsimon@stanford.edu>
+Maintainer: Noah Simon <nrsimon@uw.edu>
 }
 \seealso{\code{SGL} and \code{cv.SGL}.}
 \examples{

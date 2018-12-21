@@ -1,6 +1,6 @@
 \name{predictSGL}
 \alias{predictSGL}
-\title{Outputs predicted responses from an SGL model for new observations}
+\title{Outputs Predicted Responses from an SGL Model for New Observations}
 \description{
 Outputs predicted response values for new user input observations at a specified \code{lambda} value}
 \usage{
@@ -14,10 +14,10 @@ predictSGL(x, newX, lam)
 \details{Predicted outcomes are given}
 \references{Simon, N., Friedman, J., Hastie T., and Tibshirani, R. (2011)
   \emph{A Sparse-Group Lasso}, \cr
-  \url{http://www-stat.stanford.edu/~nsimon/SGL.pdf}
+  \url{http://faculty.washington.edu/nrsimon/SGLpaper.pdf}
 }
 \author{Noah Simon, Jerome Friedman, Trevor Hastie, and Rob Tibshirani\cr
-Maintainer: Noah Simon <nsimon@stanford.edu>
+Maintainer: Noah Simon <nrsimon@uw.edu>
 }
 \seealso{\code{SGL} and \code{cvSGL}.}
 \examples{

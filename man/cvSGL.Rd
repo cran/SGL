@@ -1,10 +1,12 @@
 \name{cvSGL}
 \alias{cvSGL}
 
-\title{Fit and cross-validate a GLM with a combination of lasso and group lasso regularization}
+\title{Fit and Cross-Validate a GLM with a Combination of Lasso and Group Lasso Regularization}
 \description{Fits and cross-validates a regularized generalized linear model via penalized maximum likelihood.  The model is fit for a path of values of the penalty parameter, and a parameter value is chosen by cross-validation. Fits linear, logistic and Cox models.}
 \usage{
-cvSGL(data, index, type = "linear", maxit = 1000, thresh = 0.001, min.frac = 0.05, nlam = 20, gamma = 0.8, nfold = 10, standardize = TRUE, verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL)
+cvSGL(data, index, type = "linear", maxit = 1000, thresh = 0.001,
+min.frac = 0.05, nlam = 20, gamma = 0.8, nfold = 10, standardize = TRUE,
+verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL)
 }
 
 \arguments{
@@ -48,10 +50,10 @@ An \code{nlame} vector of approximate standard deviations of \code{lldiff}
 }
 \references{Simon, N., Friedman, J., Hastie, T., and Tibshirani, R. (2011)
   \emph{A Sparse-Group Lasso}, \cr
-  \url{http://www-stat.stanford.edu/~nsimon/SGL.pdf}
+  \url{http://faculty.washington.edu/nrsimon/SGLpaper.pdf}
   }
 \author{Noah Simon, Jerry Friedman, Trevor Hastie, and Rob Tibshirani\cr
-Maintainer: Noah Simon \email{nsimon@stanford.edu}
+Maintainer: Noah Simon \email{nrsimon@uw.edu}
 }
 \seealso{\code{SGL}
 }

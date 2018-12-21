@@ -1,10 +1,12 @@
 \name{SGL}
 \alias{SGL}
 
-\title{Fit a GLM with a combination of lasso and group lasso regularization}
+\title{Fit a GLM with a Combination of Lasso and Group Lasso Regularization}
 \description{Fit a regularized generalized linear model via penalized maximum likelihood.  The model is fit for a path of values of the penalty parameter. Fits linear, logistic and Cox models.}
 \usage{
-SGL(data, index, type = "linear", maxit = 1000, thresh = 0.001, min.frac = 0.1, nlam = 20, gamma = 0.8, standardize = TRUE, verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL)
+SGL(data, index, type = "linear", maxit = 1000, thresh = 0.001,
+min.frac = 0.1, nlam = 20, gamma = 0.8, standardize = TRUE,
+verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL)
 }
 
 \arguments{
@@ -37,10 +39,10 @@ The sequence of models along the regularization path is fit by accelerated gener
 }
 \references{Simon, N., Friedman, J., Hastie, T., and Tibshirani, R. (2011)
   \emph{A Sparse-Group Lasso}, \cr
-  \url{http://www-stat.stanford.edu/~nsimon/SGL.pdf}
+  \url{http://faculty.washington.edu/nrsimon/SGLpaper.pdf}
 }
 \author{Noah Simon, Jerry Friedman, Trevor Hastie, and Rob Tibshirani\cr
-Maintainer: Noah Simon \email{nsimon@stanford.edu}
+Maintainer: Noah Simon \email{nrsimon@uw.edu}
 }
 
 \seealso{\code{cv.SGL}}

@@ -1,5 +1,5 @@
-4bbe9f911c54032599aad30e78c7f23f *DESCRIPTION
-3810a5dcf9fe1c2fd9f486231be1c092 *NAMESPACE
+44ac24c72d94cd7e074cdcfb270c5877 *DESCRIPTION
+46a81486829fc75d0a7e984f66ca4631 *NAMESPACE
 567618a15518790ea7a48798bfdd6064 *R/SGLmain.R
 0c6c0b1dfa5c98b55f2e9e097df3747d *R/error.bars.R
 23e4f2f396058429b0b87d2cb739b3a0 *R/log.likelihood.calc.R
@@ -15,9 +15,10 @@ d218cf8dd3f43bfb819a7a0b966b1a65 *R/zPathCalcExact.r
 32cedd6d5f8e9fe446614fa51bf97436 *R/zfindNum.r
 56d1d74918910538a2dc4008571cc524 *R/zlogitCrossVal.R
 fe0c8d413f31834ae89e1fb9ede725a9 *R/zzPathCalc.r
-2ee2edb764cd9ebabcd335100f4f4b17 *man/SGL-package.Rd
-7a7e971780f166ddffb9a546e7a00ccf *man/SGL.Rd
-77a1e5e00171e407a53a2f20076d4f70 *man/cvSGL.Rd
-0d4e5cd487714de474acc7ab19525bd9 *man/plot.cv.SGL.Rd
-006c65f75a4676b80178e8648d3066f2 *man/predictSGL.Rd
+685f408b8bce62f9c041c7586f3fc6b6 *man/SGL-package.Rd
+a9b0b191fd455c2aeb81c6ab98c6ebb8 *man/SGL.Rd
+8230586369757c3fb0ff89d29a7bcdf9 *man/cvSGL.Rd
+c9a7d62708f2a011ab69e6dba3345922 *man/plot.cv.SGL.Rd
+37d989e28247fcdcce573d5f54a249c6 *man/predictSGL.Rd
 85ac25ad5c0c83fbb5c64c5c1bdc71b0 *src/Coxfit.cpp
+7c22b1b500cab25872924e218f1645f5 *src/registerDynamicSymbol.c
