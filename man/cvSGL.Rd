@@ -4,9 +4,10 @@
 \title{Fit and Cross-Validate a GLM with a Combination of Lasso and Group Lasso Regularization}
 \description{Fits and cross-validates a regularized generalized linear model via penalized maximum likelihood.  The model is fit for a path of values of the penalty parameter, and a parameter value is chosen by cross-validation. Fits linear, logistic and Cox models.}
 \usage{
-cvSGL(data, index, type = "linear", maxit = 1000, thresh = 0.001,
+cvSGL(data, index = rep(1, ncol(data$x)), type = "linear", maxit = 1000, thresh = 0.001,
 min.frac = 0.05, nlam = 20, gamma = 0.8, nfold = 10, standardize = TRUE,
-verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL)
+verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL,
+foldid = NULL)
 }
 
 \arguments{
@@ -20,7 +21,7 @@ verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL)
   \item{nlam}{Number of lambda to use in the regularization path}
   \item{gamma}{Fitting parameter used for tuning backtracking (between 0 and 1)}
   \item{nfold}{Number of folds of the cross-validation loop}
-  \item{standardize}{Logical flag for variable standardization prior to fitting the model.}
+  \item{standardize}{Logical flag for variable standardization (scaling) prior to fitting the model.}
   \item{verbose}{Logical flag for whether or not step number will be output}
 
  \item{step}{Fitting parameter used for inital backtracking step size (between 0 and 1)}
@@ -30,6 +31,8 @@ verbose = FALSE, step = 1, reset = 10, alpha = 0.95, lambdas = NULL)
 The mixing parameter. \code{alpha} = 1 is the lasso penalty.}
 
 \item{lambdas}{A user inputted sequence of lambda values for fitting. We recommend leaving this NULL and letting SGL self-select values}
+
+\item{foldid}{An optional user-pecified vector indicating the cross-validation fold in which each observation should be included. Values in this vector should range from 1 to nfold. If left unspecified, SGL will randomly assign observations to folds}
 }
 
 \details{
@@ -47,6 +50,8 @@ An \code{nlame} vector of approximate standard deviations of \code{lldiff}
   \item{type}{Response type (linear/logic/cox)}
   \item{fit}{A model fit object created by a call to \code{SGL} on the entire dataset
 }
+  \item{foldid}{A vector indicating the cross-validation folds that each observation is assigned to}
+  \item{prevals}{A matrix of prevalidated predictions for each observation, for each lambda-value}
 }
 \references{Simon, N., Friedman, J., Hastie, T., and Tibshirani, R. (2011)
   \emph{A Sparse-Group Lasso}, \cr

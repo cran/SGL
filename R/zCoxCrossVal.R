@@ -1,8 +1,8 @@
 coxCrossVal <-
-function(data, index, nfold = 10, nlam = 20, lambdas = lambdas, min.frac = 0.05, alpha = 0.95, maxit = 10000, gamma = 0.8, thresh = 0.0001, verbose = TRUE, step = 1, reset = 10){
+function(data, index, nfold = 10, nlam = 20, lambdas = lambdas, min.frac = 0.05, alpha = 0.95, maxit = 10000, gamma = 0.8, thresh = 0.0001, verbose = TRUE, step = 1, reset = 10, foldid = NA){
 
   ## Setting up basic stuff
-
+  
   covariates <- data$x
   n <- nrow(covariates)
   p <- ncol(covariates)  
@@ -13,7 +13,7 @@ function(data, index, nfold = 10, nlam = 20, lambdas = lambdas, min.frac = 0.05,
   death.order <- order(time)
   ordered.time <- sort(time)  
 
-  X <- covariates[death.order,]  
+  X <- covariates[death.order,]
   ordered.status <- status[death.order]
 
   first.blood <- min(which(ordered.status == 1))
@@ -83,33 +83,28 @@ MainSol <- oneDimCox(data, index, thresh = thresh, inner.iter = maxit, outer.ite
 
   lldiff <- rep(0, nlam)
   lldiffFold <- matrix(0, nrow = nlam, ncol = nfold)
+  prevals <- matrix(0, nrow = nrow(data$x), ncol = nlam)
 
-  size <- floor(nrow(X)/nfold)
-  o_flow <- c(rep(1,nrow(X) - size * nfold), rep(0, nfold - (nrow(X) - size * nfold)))
-  sizes <- size + o_flow
-  ind.split <- c(1,cumsum(sizes))
-  
-  ind <- sample(1:nrow(data$x), replace = FALSE)
   for(i in 1:nfold){
-    ind.out <- ind[ind.split[i]:ind.split[i+1]]
-    ind.in <- ind[-(ind.split[i]:ind.split[i+1])]
-    new.data <- list(x = data$x[ind.in,], y = data$y[ind.in])
+    ind.out <- which(foldid == i)
+    ind.in <- which(foldid != i)
     
     new.data <- list(x = data$x[ind.in,], time = data$time[ind.in], status = data$status[ind.in])
 
     new.sol <- oneDimCox(new.data, index, thresh = thresh, inner.iter = maxit, lambdas = lambdas, outer.iter = maxit, outer.thresh = thresh, min.frac = min.frac, nlam = nlam, gamma = gamma, step = step, reset = reset, alpha = alpha)
 
 	for(k in 1:nlam){
-      lldiffFold[k,i] = log.likelihood.calc(X, new.sol$beta[,k], death.times, ordered.time) - log.likelihood.calc(new.sol$X, new.sol$beta[,k], new.sol$death.times, new.sol$ordered.time)
-
-      lldiff[k] <- lldiff[k] + log.likelihood.calc(X, new.sol$beta[,k], death.times, ordered.time) - log.likelihood.calc(new.sol$X, new.sol$beta[,k], new.sol$death.times, new.sol$ordered.time)
-      }
+      lldiffFold[k,i] = log.likelihood.calc(X, new.sol$beta[ord,k], death.times, ordered.time) - log.likelihood.calc(new.sol$X, new.sol$beta[ord,k], new.sol$death.times, new.sol$ordered.time) ## Have to reorder betas according to ordering of index!
+      
+      prevals[ind.out,k] <- exp(data$x[ind.out,] %*% new.sol$beta[ord,k])
+  }
     if(verbose == TRUE){
-   write(paste("*** NFOLD ", i, "***"),"")
+      write(paste("*** NFOLD ", i, "***"),"")
+    }
   }
-  }
+  lldiff = rowSums(lldiffFold)
   lldiffSD <- apply(lldiffFold,1,sd) * sqrt(nfold)
-  obj <- list(lambdas = lambdas, lldiff = lldiff, llSD = lldiffSD, fit = MainSol)
+  obj <- list(lambdas = lambdas, lldiff = lldiff, llSD = lldiffSD, fit = MainSol, prevals = prevals)
   class(obj)="cv.SGL"
   return(obj)
 }

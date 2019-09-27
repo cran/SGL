@@ -1,5 +1,5 @@
 linCrossVal<-
-function(data, index, nfold = 10, nlam = 20, min.frac = 0.05, alpha = 0.95,lambdas = NULL, thresh = 0.0001, maxit = 10000, gamma = 0.8, verbose = TRUE, step = 1, reset = 10){
+function(data, index, nfold = 10, nlam = 20, min.frac = 0.05, alpha = 0.95,lambdas = NULL, thresh = 0.0001, maxit = 10000, gamma = 0.8, verbose = TRUE, step = 1, reset = 10, foldid = NA){
 
   X <- data$x
   y <- data$y
@@ -38,31 +38,27 @@ MainSol <- oneDim(data, index, thresh = thresh, inner.iter = maxit, outer.iter =
   lldiff <- rep(0, nlam)
   lldiffFold <- matrix(0, nrow = nlam, ncol = nfold)
 
-  size <- floor(nrow(X)/nfold)
-  o_flow <- c(rep(1,nrow(X) - size * nfold), rep(0, nfold - (nrow(X) - size * nfold)))
-  sizes <- size + o_flow
-  ind.split <- c(1,cumsum(sizes))
+  prevals <- matrix(0, nrow = nrow(data$x), ncol = nlam)
   
-  ind <- sample(1:nrow(data$x), replace = FALSE)
   for(i in 1:nfold){
-    ind.out <- ind[ind.split[i]:ind.split[i+1]]
-    ind.in <- ind[-(ind.split[i]:ind.split[i+1])]
+    ind.out <- which(foldid == i)
+    ind.in <- which(foldid != i)
     new.data <- list(x = data$x[ind.in,], y = data$y[ind.in])
 
     new.sol <- oneDim(new.data, index, thresh = thresh, inner.iter = maxit, lambdas = lambdas, outer.iter = maxit, outer.thresh = thresh, min.frac = min.frac, nlam = nlam, gamma = gamma, step = step, reset = reset, alpha = alpha)
 
     for(k in 1:nlam){
-    
-	lldiffFold[k,i] <- sum((y[ind.out] - X[ind.out,] %*% new.sol$beta[ ,k])^2) / 2
-
-        lldiff[k] <- lldiff[k] + sum((y[ind.out] - X[ind.out,] %*% new.sol$beta[ ,k])^2) / 2
+      etas <- X[ind.out,] %*% new.sol$beta[ord,k] ## Have to reorder betas according to ordering of index!
+      lldiffFold[k,i] <- sum((y[ind.out] - etas)^2) / 2
+      prevals[ind.out,k] <- etas
       }
     if(verbose == TRUE){
   write(paste("*** NFOLD ", i, "***"),"")
   }
   }
-  lldiffSD <- apply(lldiffFold,1,sd)*sqrt(nfold)
-  obj <- list(lambdas = lambdas, lldiff = lldiff,llSD = lldiffSD, fit = MainSol)
+  lldiff = rowSums(lldiffFold)
+  lldiffSD <- apply(lldiffFold,1,sd) * sqrt(nfold)
+  obj <- list(lambdas = lambdas, lldiff = lldiff,llSD = lldiffSD, fit = MainSol, prevals = prevals)
   class(obj)="cv.SGL"
   return(obj)
 }

@@ -1,5 +1,5 @@
 logitCrossVal <-
-function(data, index, nfold = 10, nlam = 20, lambdas = lambdas, thresh = 0.0001, maxit = 10000, alpha = 0.95, min.frac = 0.05, gamma = 0.8, verbose = TRUE, step = 1, reset = 10){
+function(data, index, nfold = 10, nlam = 20, lambdas = lambdas, thresh = 0.0001, maxit = 10000, alpha = 0.95, min.frac = 0.05, gamma = 0.8, verbose = TRUE, step = 1, reset = 10, foldid = NA){
   
   X <- data$x
   y <- data$y
@@ -34,39 +34,35 @@ function(data, index, nfold = 10, nlam = 20, lambdas = lambdas, thresh = 0.0001,
   MainSol <- oneDimLogit(data, index, thresh = thresh, inner.iter = maxit, outer.iter = maxit, outer.thresh = thresh, min.frac = min.frac, nlam = nlam, lambdas = lambdas, gamma = gamma, step = step, reset = reset, alpha = alpha)
 
 
-lambdas <- MainSol$lambdas
+  lambdas <- MainSol$lambdas
 
   lldiff <- rep(0, nlam)
   lldiffFold <- matrix(0, nrow = nlam, ncol = nfold)
+  prevals <- matrix(0, nrow = nrow(data$x), ncol = nlam)
   
-  size <- floor(nrow(X)/nfold)
-  o_flow <- c(rep(1,nrow(X) - size * nfold), rep(0, nfold - (nrow(X) - size * nfold)))
-  sizes <- size + o_flow
-  ind.split <- c(1,cumsum(sizes))
-  
-  ind <- sample(1:nrow(data$x), replace = FALSE)
   for(i in 1:nfold){
-    ind.out <- ind[ind.split[i]:ind.split[i+1]]
-    ind.in <- ind[-(ind.split[i]:ind.split[i+1])]
+    ind.out <- which(foldid == i)
+    ind.in <- which(foldid != i)
     new.data <- list(x = data$x[ind.in,], y = data$y[ind.in])
 
     new.sol <- oneDimLogit(new.data, index, thresh = thresh, inner.iter = maxit, lambdas = lambdas, outer.iter = maxit, outer.thresh = thresh, min.frac = min.frac, nlam = nlam, gamma = gamma, step = step, reset = reset, alpha = alpha)
 
     for(k in 1:nlam){
 
-	our.eta <- X[ind.out,] %*% new.sol$beta[,k] + new.sol$intercepts[k]
-
-	prob <- exp(our.eta)/(1+exp(our.eta))
-      lldiffFold[k,i] <- - sum(y[ind.out] * log(prob) + (1 - y[ind.out]) * log(1 - prob))
-
-      lldiff[k] <- lldiff[k] - sum(y[ind.out] * log(prob) + (1 - y[ind.out]) * log(1 - prob))
+	    our.eta <- X[ind.out,] %*% new.sol$beta[ord,k] + new.sol$intercepts[k]
+	    prob <- exp(our.eta)/(1+exp(our.eta))
+      
+	    lldiffFold[k,i] <- - sum(y[ind.out] * log(prob) + (1 - y[ind.out]) * log(1 - prob))
+      
+      prevals[ind.out,k] <- prob
     }
     if(verbose == TRUE){
-  write(paste("*** NFOLD ", i, "***"),"")
-}
+      write(paste("*** NFOLD ", i, "***"),"")
+    }
   }
-  lldiffSD <- apply(lldiffFold,1,sd)*sqrt(nfold)
-  obj <- list(lambdas = lambdas, lldiff = lldiff,llSD = lldiffSD, fit = MainSol)
+  lldiff = rowSums(lldiffFold)
+  lldiffSD <- apply(lldiffFold,1,sd) * sqrt(nfold)
+  obj <- list(lambdas = lambdas, lldiff = lldiff,llSD = lldiffSD, fit = MainSol, prevals = prevals)
   class(obj)="cv.SGL"
 return(obj)
 }

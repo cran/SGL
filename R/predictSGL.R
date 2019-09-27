@@ -3,27 +3,28 @@ predictSGL = function(x,newX,lam){
 
   X <- newX
 
-  if(!is.null(x$X.transform)){
     if(is.matrix(X)){
       X <- t(t(newX) - x$X.transform$X.means)
-      X <- t(t(X) / x$X.transform$X.scale)
+      if(!is.null(x$X.transform$X.scale)){
+        X <- t(t(X) / x$X.transform$X.scale)
+      }
     }
     if(is.vector(X)){
       X <- X - x$X.transform$X.means
+      if(!is.null(x$X.transform$X.scale)){
       X <- X / x$X.transform$X.scale
-    }  
-  }
+      }  
+    }
 
   intercept <- 0
 
-  if(!is.null(x$intercept)){
-    if(x$type == "linear"){
-      intercept <- x$intercept
-    }
-    if(x$type == "logit"){
-      intercept <- x$intercept[lam]
-    }
+  if(x$type == "linear"){
+    intercept <- x$intercept
   }
+  if(x$type == "logit"){
+    intercept <- x$intercept[lam]
+  }
+
 
   if(is.matrix(X)){
     eta <- X %*% x$beta[,lam] + intercept
